@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 public class Client {
 
     @Id // Clé primaire
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incrémentation
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "client_id")// Auto-incrémentation
     private Long id;
 
     @Column(nullable = false)

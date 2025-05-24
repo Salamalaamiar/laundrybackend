@@ -59,7 +59,7 @@ public class AuthController {
                     Map<String, Object> response = new HashMap<>();
                     response.put("success", true);
                     response.put("message", "Login successful");
-                    response.put("clientId", client.getId());
+                    response.put("clientId", client.getId()); //ajouter id dans json response
                     response.put("email", client.getEmail());
                     return response;
                 })
