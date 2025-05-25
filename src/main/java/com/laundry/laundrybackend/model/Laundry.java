@@ -56,6 +56,15 @@ public class Laundry {
     @Column(name = "is_activated")
     private Boolean isActivated = false;
 
+    @Column(name = "rating")
+    private Double rating;
+    public Double getRating() {
+        return rating;
+    }
+    public void setrating(Double rating) {
+        this.rating = rating;
+    }
+
     // Constructors
     public Laundry() {
         this.createdAt = LocalDateTime.now();

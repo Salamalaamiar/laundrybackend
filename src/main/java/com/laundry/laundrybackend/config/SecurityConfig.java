@@ -24,6 +24,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()      //  Autoriser toutes les routes d'authentification
                         .requestMatchers("/api/orders/**").permitAll()    // Autoriser les routes de commande
                         .requestMatchers("/api/fournisseur/auth/login").permitAll()
+                        .requestMatchers("/api/laundries/**").permitAll()
                         .anyRequest().authenticated() // Require authentication for other endpoints
                 )
                 .httpBasic(httpBasic -> httpBasic.disable()) // Disable basic auth
