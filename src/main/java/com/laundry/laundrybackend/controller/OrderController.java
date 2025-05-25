@@ -1,7 +1,8 @@
 package com.laundry.laundrybackend.controller;
 
+import com.laundry.laundrybackend.dto.OrderDTO;
 import com.laundry.laundrybackend.model.Order;
-import com.laundry.laundrybackend.repository.OrderRepository;
+import com.laundry.laundrybackend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,54 +11,126 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "*")  // Autoriser les appels Cross-Origin, adapte selon ta config
+@CrossOrigin(origins = "*") // Configure properly for production
 public class OrderController {
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderService orderService;
 
-    // Créer une commande
+    // NEW ENDPOINTS - From previous implementation
+    @GetMapping("/pending")
+    public ResponseEntity<List<OrderDTO>> getPendingOrders(@RequestParam Long clientId) {
+        try {
+            List<OrderDTO> pendingOrders = orderService.getPendingOrdersByClient(clientId);
+            return ResponseEntity.ok(pendingOrders);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<OrderDTO>> getActiveOrders(@RequestParam Long clientId) {
+        try {
+            List<OrderDTO> activeOrders = orderService.getActiveOrdersByClient(clientId);
+            return ResponseEntity.ok(activeOrders);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderDTO>> getAllOrdersByClient(@RequestParam Long clientId) {
+        try {
+            List<OrderDTO> allOrders = orderService.getAllOrdersByClient(clientId);
+            return ResponseEntity.ok(allOrders);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/{orderId}/client/{clientId}")
+    public ResponseEntity<OrderDTO> getOrderByIdAndClient(@PathVariable Long orderId, @PathVariable Long clientId) {
+        try {
+            OrderDTO order = orderService.getOrderByIdAndClient(orderId, clientId);
+
+            if (order != null) {
+                return ResponseEntity.ok(order);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    // EXISTING ENDPOINTS - Your original implementation
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order savedOrder = orderRepository.save(order);
-        return ResponseEntity.ok(savedOrder);
+        try {
+            Order savedOrder = orderService.saveOrder(order);
+            return ResponseEntity.ok(savedOrder);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
-    // Récupérer toutes les commandes
     @GetMapping
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public ResponseEntity<List<Order>> getAllOrders() {
+        try {
+            List<Order> orders = orderService.getAllOrders();
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
-    // Récupérer une commande par ID
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        return orderRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            return orderService.getOrderById(id)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
-    // Mettre à jour une commande (par exemple pour changer le status)
     @PutMapping("/{id}")
     public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order orderDetails) {
-        return orderRepository.findById(id)
-                .map(order -> {
-                    order.setStatus(orderDetails.getStatus());
-                    // tu peux ajouter plus de mises à jour ici si besoin
-                    Order updated = orderRepository.save(order);
-                    return ResponseEntity.ok(updated);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            return orderService.getOrderById(id)
+                    .map(order -> {
+                        order.setStatus(orderDetails.getStatus());
+                        // Add more field updates as needed
+                        if (orderDetails.getAddress() != null) {
+                            order.setAddress(orderDetails.getAddress());
+                        }
+                        if (orderDetails.getPickupDate() != null) {
+                            order.setPickupDate(orderDetails.getPickupDate());
+                        }
+                        if (orderDetails.getDeliveryDate() != null) {
+                            order.setDeliveryDate(orderDetails.getDeliveryDate());
+                        }
+                        Order updated = orderService.saveOrder(order);
+                        return ResponseEntity.ok(updated);
+                    })
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
-    // Supprimer une commande
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
-        return orderRepository.findById(id)
-                .map(order -> {
-                    orderRepository.delete(order);
-                    return ResponseEntity.noContent().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
+        try {
+            return orderService.getOrderById(id)
+                    .map(order -> {
+                        orderService.deleteOrder(id);
+                        return ResponseEntity.noContent().build();
+                    })
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }
