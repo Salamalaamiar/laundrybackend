@@ -20,7 +20,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/laundry/send").permitAll() // Allow registration endpoint
                         .requestMatchers("/api/laundry/**").permitAll() // Allow public access to laundry API
-                        .requestMatchers("/error").permitAll() // Allow error page
+                        .requestMatchers("/error").permitAll()// Allow error page
+                        .requestMatchers("/api/auth/**").permitAll()      //  Autoriser toutes les routes d'authentification
+                        .requestMatchers("/api/orders/**").permitAll()    // Autoriser les routes de commande
                         .anyRequest().authenticated() // Require authentication for other endpoints
                 )
                 .httpBasic(httpBasic -> httpBasic.disable()) // Disable basic auth
