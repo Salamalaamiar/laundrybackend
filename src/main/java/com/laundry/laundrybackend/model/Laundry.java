@@ -1,6 +1,5 @@
 package com.laundry.laundrybackend.model;
 
-
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,12 +34,16 @@ public class Laundry {
     @Column(name = "password_hash")
     private String passwordHash;
 
+    // ADD THIS FIELD for temporary password
+    @Column(name = "temporary_password")
+    private String temporaryPassword;
+
     @Lob
-    @Column(name = "shop_image")
+    @Column(name = "shop_image", columnDefinition = "LONGTEXT")
     private String shopImage;
 
     @Lob
-    @Column(name = "license_image")
+    @Column(name = "license_image", columnDefinition = "LONGTEXT")
     private String licenseImage;
 
     @Column(name = "created_at")
@@ -49,105 +52,56 @@ public class Laundry {
     @Column(name = "is_approved")
     private Boolean isApproved = false;
 
+    // ADD THIS FIELD for activation status
+    @Column(name = "is_activated")
+    private Boolean isActivated = false;
+
     // Constructors
     public Laundry() {
         this.createdAt = LocalDateTime.now();
     }
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
+    // All your existing getters and setters...
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getWorkHours() { return workHours; }
+    public void setWorkHours(String workHours) { this.workHours = workHours; }
 
-    public String getAddress() {
-        return address;
-    }
+    public List<String> getServices() { return services; }
+    public void setServices(List<String> services) { this.services = services; }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+    public String getAvailability() { return availability; }
+    public void setAvailability(String availability) { this.availability = availability; }
 
-    public String getWorkHours() {
-        return workHours;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setWorkHours(String workHours) {
-        this.workHours = workHours;
-    }
+    public String getPasswordHash() { return passwordHash; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
 
-    public List<String> getServices() {
-        return services;
-    }
+    public String getShopImage() { return shopImage; }
+    public void setShopImage(String shopImage) { this.shopImage = shopImage; }
 
-    public void setServices(List<String> services) {
-        this.services = services;
-    }
+    public String getLicenseImage() { return licenseImage; }
+    public void setLicenseImage(String licenseImage) { this.licenseImage = licenseImage; }
 
-    public String getAvailability() {
-        return availability;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public void setAvailability(String availability) {
-        this.availability = availability;
-    }
+    public Boolean getIsApproved() { return isApproved; }
+    public void setIsApproved(Boolean isApproved) { this.isApproved = isApproved; }
 
-    public String getEmail() {
-        return email;
-    }
+    // ADD THESE NEW GETTERS/SETTERS
+    public String getTemporaryPassword() { return temporaryPassword; }
+    public void setTemporaryPassword(String temporaryPassword) { this.temporaryPassword = temporaryPassword; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public String getShopImage() {
-        return shopImage;
-    }
-
-    public void setShopImage(String shopImage) {
-        this.shopImage = shopImage;
-    }
-
-    public String getLicenseImage() {
-        return licenseImage;
-    }
-
-    public void setLicenseImage(String licenseImage) {
-        this.licenseImage = licenseImage;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Boolean getIsApproved() {
-        return isApproved;
-    }
-
-    public void setIsApproved(Boolean isApproved) {
-        this.isApproved = isApproved;
-    }
+    public Boolean getIsActivated() { return isActivated; }
+    public void setIsActivated(Boolean isActivated) { this.isActivated = isActivated; }
 }

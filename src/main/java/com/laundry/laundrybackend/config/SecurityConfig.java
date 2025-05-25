@@ -23,6 +23,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()// Allow error page
                         .requestMatchers("/api/auth/**").permitAll()      //  Autoriser toutes les routes d'authentification
                         .requestMatchers("/api/orders/**").permitAll()    // Autoriser les routes de commande
+                        .requestMatchers("/api/fournisseur/auth/login").permitAll()
                         .anyRequest().authenticated() // Require authentication for other endpoints
                 )
                 .httpBasic(httpBasic -> httpBasic.disable()) // Disable basic auth
