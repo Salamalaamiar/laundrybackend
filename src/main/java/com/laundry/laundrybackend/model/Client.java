@@ -57,4 +57,6 @@ public class Client {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
 }
